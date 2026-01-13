@@ -26,7 +26,7 @@ const signUpSchema = z.object({
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { user, signIn, signUp } = useAuth();
+  const { user, signIn, signUp, signInWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -46,6 +46,15 @@ const Auth = () => {
       navigate('/');
     }
   }, [user, navigate]);
+
+  const handleGoogleAuth = async () => {
+    try {
+      setIsLoading(true);
+      await signInWithGoogle();
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -270,6 +279,17 @@ const Auth = () => {
               </form>
             </TabsContent>
           </Tabs>
+          <div className="px-6 pb-6">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={handleGoogleAuth}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Continuing with Google...' : 'Continue with Google'}
+            </Button>
+          </div>
         </Card>
 
         <p className="text-center text-sm text-muted-foreground mt-4">
